@@ -25,7 +25,6 @@ func main() {
 
 	// register route greet
 	app.GET("/chat", func(ctx *gofr.Context) (interface{}, error) {
-
 		return "Hello World!", nil
 	})
 
@@ -33,7 +32,9 @@ func main() {
 		return TweetHandler(ctx)
 	})
 
-	app.POST("/linkedin", func(c *gofr.Context) (interface{}, error) {
-		return PostInLinkedIn("Hi, This if a test linked in post")
+	app.POST("/linkedin", func(ctx *gofr.Context) (interface{}, error) {
+		return PostInLinkedIn(ctx)
 	})
+
+	app.Run()
 }

@@ -7,6 +7,8 @@ import (
 	"io"
 	"net/http"
 	"os"
+
+	"gofr.dev/pkg/gofr"
 )
 
 const (
@@ -93,6 +95,9 @@ func createPost(urn, content string) (string, error) {
 	req.Header.Add("X-Restli-Protocol-Version", "2.0.0")
 	req.Header.Add("Content-Type", "application/json")
 	accessToken := os.Getenv(LINKEDIN_API_TOKEN)
+	if accessToken == "" {
+		return "", fmt.Errorf("no LinkedIn access token found")
+	}
 	req.Header.Add("Authorization", "Bearer "+accessToken)
 
 	client := &http.Client{}
@@ -114,10 +119,21 @@ func createPost(urn, content string) (string, error) {
 	return "", fmt.Errorf("cannot post in LinkedIn - %v", response)
 }
 
-func PostInLinkedIn(content string) (string, error) {
+func PostInLinkedIn(ctx *gofr.Context) (string, error) {
+	var request struct {
+		Content string `json:"content"`
+	}
+
+	if err := ctx.Bind(&request); err != nil {
+		return "", err
+	}
+
+	if request.Content == "" {
+		return "", fmt.Errorf("post content cannot be empty")
+	}
 	urn, err := getURN()
 	if err != nil {
 		return "", err
 	}
-	return createPost(urn, content)
+	return createPost(urn, request.Content)
 }
