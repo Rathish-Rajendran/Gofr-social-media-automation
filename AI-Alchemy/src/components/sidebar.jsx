@@ -1,7 +1,5 @@
-import { useState } from "react";
-
-const SideBar = ({ items }) => {
-    const [selected, setSelected] = useState(0)
+const SideBar = ({ items, selectedItem=0 }) => {
+    const selected = selectedItem
 
     return (
     <nav className="nav flex-column align-self-start nav-pills">
@@ -10,9 +8,9 @@ const SideBar = ({ items }) => {
                 href="#"
                 className={selected === index ? "nav-link active m-1" : "nav-link"}
                 aria-current={selected === index ? "page" : false}
-                onClick={() => setSelected(index)}
+                onClick={() => item.onClick(index)}
                 >
-                    {item}
+                    {item.name}
                 </a>
             )
         }

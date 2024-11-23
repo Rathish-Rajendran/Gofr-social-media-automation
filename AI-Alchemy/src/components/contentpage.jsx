@@ -12,6 +12,9 @@ const ContentPage = ({ items, showItems=true }) => {
                 </div>
             ))
         }
+        { showItems && items.length === 0 &&
+            <h1>No items to show</h1>
+        }
 
         { /* Show the analytics */}
         {!showItems && <h1>No analytics at the moment</h1>}

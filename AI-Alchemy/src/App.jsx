@@ -13,37 +13,65 @@ function App() {
     { name: "Analytics", onClick: () => setShowCards(false) }
   ]
 
+  const [selectedSidebarItem, setSelectedSidebarItem] = useState(0)
   const sidebarItems = [
-    "LinkedIn",
-    "Twitter / X",
-    "Mails"
+    { name: "LinkedIn", onClick: setSelectedSidebarItem },
+    { name: "Twitter / X", onClick: setSelectedSidebarItem },
+    { name: "Mails", onClick: setSelectedSidebarItem }
   ]
 
   // Some dummy data for LinkedIn
   const linkedInContents = [
     {
-      heading: "Heading 1",
+      heading: "Heading LinkedIn 1",
       body: "Body 1, abcdefghij"
     },
     {
-      heading: "Heading 2",
+      heading: "Heading LinkedIn 2",
       body: "Body 2, abcdefghij"
     },
     {
-      heading: "Heading 2",
+      heading: "HeadingLinkedIn 2",
       body: "Body 2, abcdefghij"
     },
   ]
+
+  // Some dummy data for Twitter
+  const twitterContents = [
+    {
+      heading: "Heading Twitter / X 1",
+      body: "Body 1, abcdefghij"
+    },
+    {
+      heading: "Heading Twitter / X 2",
+      body: "Body 2, abcdefghij"
+    },
+    {
+      heading: "HeadingTwitter / X 2",
+      body: "Body 2, abcdefghij"
+    },
+  ]
+
+  // Some mail mock data
+  const mailContents = []
+
+  const getItemsToShow = () => {
+    if (selectedSidebarItem === 0) return linkedInContents;
+    if (selectedSidebarItem === 1) return twitterContents;
+    return mailContents;
+  }
 
   return (
     <div className="container-fluid">
       <div className="container-fluid row">
         <div className="col-2 container-fluid">
-          <SideBar items={sidebarItems} />
+          <SideBar items={sidebarItems} selectedItem={selectedSidebarItem} />
         </div>
         <div className="col container-fluid">
           <Navbar items={navbarItems} selectedItem={showCards ? 0 : 1} />
-          <ContentPage showItems={showCards} items={linkedInContents} />
+          <ContentPage showItems={showCards}
+            items={getItemsToShow()}
+          />
         </div>
       </div>
     </div>
