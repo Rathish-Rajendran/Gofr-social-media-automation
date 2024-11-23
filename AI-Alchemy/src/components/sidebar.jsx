@@ -1,10 +1,21 @@
-const SideBar = () => {
+import { useState } from "react";
+
+const SideBar = ({ items }) => {
+    const [selected, setSelected] = useState(0)
+
     return (
     <nav className="nav flex-column align-self-start nav-pills">
-        <a className="nav-link" aria-current="page" href="#">Active</a>
-        <a className="nav-link active" href="#">Link</a>
-        <a className="nav-link" href="#">Link</a>
-        <a className="nav-link disabled" aria-disabled="true">Disabled</a>
+        {
+            items.map((item, index) => <a key={index}
+                href="#"
+                className={selected === index ? "nav-link active m-1" : "nav-link"}
+                aria-current={selected === index ? "page" : false}
+                onClick={() => setSelected(index)}
+                >
+                    {item}
+                </a>
+            )
+        }
     </nav>
     );
 }

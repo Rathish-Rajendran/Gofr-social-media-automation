@@ -8,11 +8,17 @@ function App() {
     "Analytics"
   ]
 
+  const sidebarItems = [
+    "LinkedIn",
+    "Twitter / X",
+    "Mails"
+  ]
+
   return (
     <div className="container-fluid">
       <div className="container-fluid row">
         <div className="col-2 container-fluid">
-          <SideBar />
+          <SideBar items={sidebarItems} />
         </div>
         <div className="col container-fluid">
           <Navbar items={navbarItems} />
