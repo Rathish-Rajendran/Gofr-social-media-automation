@@ -2,7 +2,11 @@ module github.com/Rathish-Rajendran/Gofr-social-media-automation
 
 go 1.23.3
 
-require gofr.dev v1.27.1
+require (
+	github.com/dghubble/oauth1 v0.7.3
+	github.com/joho/godotenv v1.5.1
+	gofr.dev v1.27.1
+)
 
 require (
 	cloud.google.com/go v0.116.0 // indirect
@@ -37,7 +41,6 @@ require (
 	github.com/grpc-ecosystem/go-grpc-middleware v1.4.0 // indirect
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.22.0 // indirect
 	github.com/hashicorp/golang-lru/v2 v2.0.7 // indirect
-	github.com/joho/godotenv v1.5.1 // indirect
 	github.com/klauspost/compress v1.17.9 // indirect
 	github.com/lib/pq v1.10.9 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
