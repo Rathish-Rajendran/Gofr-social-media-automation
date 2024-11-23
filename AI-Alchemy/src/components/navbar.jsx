@@ -1,20 +1,18 @@
-import { useState } from "react";
-
-const Navbar = ({ items }) => {
-    const[selected, setSelected] = useState(0)
+const Navbar = ({ items, selectedItem=0 }) => {
+    const selected = selectedItem;
 
     return (
-    <ul class="nav nav-underline nav-justified mb-3">
+    <ul className="nav nav-underline nav-justified mb-3">
         {
             items.map((item, index) => <li
                 key={index}
                 className="nav-item"
-                onClick={() => setSelected(index)}
+                onClick={item.onClick}
                 >
                     <a href="#"
                         className={selected === index ? "nav-link active": "nav-link"}
                         aria-current={selected === index ? "page" : false}
-                    >{item}</a>
+                    >{item.name}</a>
             </li>)
         }
     </ul>
