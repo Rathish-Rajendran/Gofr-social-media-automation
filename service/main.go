@@ -33,7 +33,7 @@ func main() {
 		return TweetHandler(ctx)
 	})
 
-	// Runs the server, it will listen on the default port 8000.
-	// it can be over-ridden through configs
-	app.Run()
+	app.POST("/linkedin", func(c *gofr.Context) (interface{}, error) {
+		return PostInLinkedIn("Hi, This if a test linked in post")
+	})
 }
