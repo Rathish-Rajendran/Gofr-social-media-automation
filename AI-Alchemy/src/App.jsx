@@ -3,6 +3,11 @@ import Navbar from './components/navbar'
 import SideBar from './components/sidebar'
 
 function App() {
+  const navbarItems = [
+    "Approve to send",
+    "Analytics"
+  ]
+
   return (
     <div className="container-fluid">
       <div className="container-fluid row">
@@ -10,7 +15,7 @@ function App() {
           <SideBar />
         </div>
         <div className="col container-fluid">
-          <Navbar />
+          <Navbar items={navbarItems} />
           <h1>Hello World!!!</h1>
         </div>
       </div>
