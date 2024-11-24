@@ -29,12 +29,12 @@ func main() {
 	})
 
 	app.GET("/googleGroup", func(ctx *gofr.Context) (interface{}, error) {
-		return GoogleGroupHandler( ctx )
-	} )
+		return GoogleGroupHandler(ctx)
+	})
 
-	app.POST("/googleGroupReplay", func(ctx *gofr.Context) (interface{}, error) {
-		return GoogleGroupReplay( ctx )
-	} )
+	app.POST("/googleGroupReply", func(ctx *gofr.Context) (interface{}, error) {
+		return GoogleGroupReplay(ctx)
+	})
 
 	app.POST("/tweet", func(ctx *gofr.Context) (interface{}, error) {
 		return TweetHandler(ctx)

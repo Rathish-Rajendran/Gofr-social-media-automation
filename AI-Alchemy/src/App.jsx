@@ -27,6 +27,32 @@ const sendTwitterPostRequest = async (heading, body) => {
   }
 }
 
+const sendMail = async (from, body, subject) => {
+  const content = {
+    content: {
+      from, body, subject
+    }
+  }; // Combine heading and body
+  console.log(JSON.stringify(content))
+  try {
+    const response = await fetch(BACKEND_URL + "/googleGroupReply", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(content),
+    });
+
+    if (response.ok) {
+      console.log("Content sent successfully:", content);
+    } else {
+      console.error("Failed to send content:", response.statusText);
+    }
+  } catch (error) {
+    console.error("Error while sending content:", error);
+  }
+}
+
 // let isMounted = true; // To prevent setting state after unmount
 
 function App() {
@@ -43,6 +69,9 @@ function App() {
         }
         const result = await response.json();
         const data = JSON.parse(result["data"])["output"]
+        data.forEach(element => {
+          element.onSend = () => sendMail(element.from, element.body, element.subject)
+        });
         setMailData(data);
       } catch (err) {
           console.log(err)

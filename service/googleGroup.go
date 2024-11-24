@@ -34,19 +34,29 @@ type Output struct {
 }
 
 func GoogleGroupReplay(ctx *gofr.Context) (interface{}, error) {
+	// Parse the JSON body for the "content" field
+	var request struct {
+		Content Email `json:"content"`
+	}
+
+	if err := ctx.Bind(&request); err != nil {
+		return nil, err
+	}
+
 	email := os.Getenv("GMAIL")
 	password := os.Getenv("GMAIL_PASSWORD")
 	message := gomail.NewMessage()
 	message.SetHeader("From", email)
 	// senderEmail := fmt.Sprintf("%v@%v", sender.MailboxName, sender.HostName)
-	// message.SetHeader("To", senderEmail)
-	// message.SetHeader("Subject", msg.Envelope.Subject)
-	// message.SetBody("text/plain", replyContent)
+	message.SetHeader("To", request.Content.From)
+	message.SetHeader("Subject", request.Content.Subject)
+	message.SetBody("text/plain", request.Content.Body)
+	fmt.Println(request.Content)
 	// Connect to Gmail SMTP server
 	d := gomail.NewDialer("smtp.gmail.com", 587, email, password)
 	// Send the email
 	if err := d.DialAndSend(message); err != nil {
-		panic(err)
+		return "", err
 	}
 	println("Email sent successfully!")
 	return nil, nil
