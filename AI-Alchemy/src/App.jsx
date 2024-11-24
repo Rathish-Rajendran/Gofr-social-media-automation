@@ -2,7 +2,7 @@ import "bootstrap/dist/css/bootstrap.css"
 import Navbar from './components/navbar'
 import SideBar from './components/sidebar'
 import ContentPage from "./components/contentpage"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 const BACKEND_URL="http://localhost:8000"
 
@@ -27,7 +27,32 @@ const sendTwitterPostRequest = async (heading, body) => {
   }
 }
 
+// let isMounted = true; // To prevent setting state after unmount
+
 function App() {
+  const [mailData, setMailData] = useState([])
+  const [displayMail, setDisplayMail] = useState(false);
+
+  useEffect(() => {
+    const fetchData = async () => {
+
+      try {
+        const response = await fetch(BACKEND_URL + "/googleGroup");
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const result = await response.json();
+        const data = JSON.parse(result["data"])["output"]
+        setMailData(data);
+      } catch (err) {
+          console.log(err)
+      }
+    };
+
+    fetchData();
+
+  }, []); // Empty dependency array ensures it only runs once
+
   // showCards is a bool controlling if we should show
   // the cards or the analytics
   const[showCards, setShowCards] = useState(true)
@@ -38,9 +63,19 @@ function App() {
 
   const [selectedSidebarItem, setSelectedSidebarItem] = useState(0)
   const sidebarItems = [
-    { name: "LinkedIn", onClick: setSelectedSidebarItem },
-    { name: "Twitter / X", onClick: setSelectedSidebarItem },
-    { name: "Mails", onClick: setSelectedSidebarItem }
+    { name: "LinkedIn", onClick: (index) => {
+      setSelectedSidebarItem(index)
+      setDisplayMail(false)
+    } },
+    { name: "Twitter / X", onClick: (index) => {
+      setSelectedSidebarItem(index)
+      setDisplayMail(false)
+    } },
+    { name: "Mails", onClick: (index) => {
+        setSelectedSidebarItem(index)
+        setDisplayMail(true)
+      }
+    }
   ]
 
   // Some dummy data for LinkedIn
@@ -78,13 +113,10 @@ function App() {
     },
   ]
 
-  // Some mail mock data
-  const mailContents = []
-
   const getItemsToShow = () => {
     if (selectedSidebarItem === 0) return linkedInContents;
     if (selectedSidebarItem === 1) return twitterContents;
-    return mailContents;
+    return mailData;
   }
 
   return (
@@ -97,6 +129,7 @@ function App() {
           <Navbar items={navbarItems} selectedItem={showCards ? 0 : 1} />
           <ContentPage showItems={showCards}
             items={getItemsToShow()}
+            isMail={displayMail}
           />
         </div>
       </div>
