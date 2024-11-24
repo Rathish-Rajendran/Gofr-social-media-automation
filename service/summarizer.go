@@ -16,9 +16,20 @@ type Request struct {
 	Content string `json:"content"`
 }
 
+type Response struct {
+	Result string `json:"result"`
+}
+
 func GetResolvedMail(body string) (string, error) {
-	jsonBody := []byte(fmt.Sprintf(`{"content": "%s - can GoFr solve the issue? If yes, tell me concisely"}`, body))
-	req, err := http.NewRequest("GET", URL, bytes.NewBuffer(jsonBody))
+	request := Request{
+		Content: fmt.Sprintf("%s - can GoFr solve the issue? If yes, tell me concisely", body),
+	}
+	//jsonBody := []byte(fmt.Sprintf(`{"content": "%s - can GoFr solve the issue? If yes, tell me concisely"}`, body))
+	out, err := json.Marshal(request)
+	if err != nil {
+		return "", fmt.Errorf("Cannot marshall json request - %v", err)
+	}
+	req, err := http.NewRequest("GET", URL, bytes.NewBuffer(out))
 	if err != nil {
 		return "", err
 	}
@@ -43,15 +54,11 @@ func GetResolvedMail(body string) (string, error) {
 	}
 
 	// Parse the JSON response
-	var responseData map[string]interface{}
+	var responseData Response
 	if err := json.Unmarshal(respBody, &responseData); err != nil {
 		panic(err)
 	}
 
 	// Extract the 'result' key
-	if result, ok := responseData["result"]; ok {
-		return result.(string), nil
-	} else {
-		return "", fmt.Errorf("Key 'result' not found in response")
-	}
+	return responseData.Result, nil
 }
