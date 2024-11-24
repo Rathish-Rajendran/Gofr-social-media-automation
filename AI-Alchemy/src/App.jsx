@@ -59,9 +59,32 @@ const sendMail = async (from, body, subject) => {
 
 function App() {
   const [mailData, setMailData] = useState([]);
+  const [tweetData, setTweetData] = useState([]);
   const [displayMail, setDisplayMail] = useState(false);
 
   useEffect(() => {
+    const fetchTweets = async () => {
+      try {
+        const response = await fetch(BACKEND_URL + "/newTweet");
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const result = await response.json();
+        console.log("TRACE11: ", result);
+        const data = JSON.parse(result["data"]);
+        const tweets = [];
+        data.forEach((element) => {
+          tweets.push({
+            body: element.result,
+            onSend: () => sendTwitterPostRequest("GoFr Tweet", element.result),
+          });
+        });
+        setTweetData(tweets);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
     const fetchData = async () => {
       try {
         const response = await fetch(BACKEND_URL + "/googleGroup");
@@ -69,7 +92,7 @@ function App() {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const result = await response.json();
-        console.log(result);
+        // console.log(result);
         const data = JSON.parse(result["data"])["output"];
         data.forEach((element) => {
           element.onSend = () =>
@@ -82,6 +105,7 @@ function App() {
     };
 
     fetchData();
+    fetchTweets();
   }, []); // Empty dependency array ensures it only runs once
 
   // showCards is a bool controlling if we should show
@@ -134,30 +158,30 @@ function App() {
   ];
 
   // Some dummy data for Twitter
-  const twitterContents = [
-    {
-      heading: "Heading Twitter / X 1",
-      body: "Body 1, abcdefghij",
-      onSend: () =>
-        sendTwitterPostRequest("Heading Twitter / X 1", "Body 1, abcdefghij"),
-    },
-    {
-      heading: "Heading Twitter / X 2",
-      body: "Body 2, abcdefghij",
-      onSend: () =>
-        sendTwitterPostRequest("Heading Twitter / X 2", "Body 2, abcdefghij"),
-    },
-    {
-      heading: "HeadingTwitter / X 2",
-      body: "Body 2, abcdefghij",
-      onSend: () =>
-        sendTwitterPostRequest("Heading Twitter / X 2", "Body 2, abcdefghij"),
-    },
-  ];
+  // const twitterContents = [
+  //   {
+  //     heading: "Heading Twitter / X 1",
+  //     body: "Body 1, abcdefghij",
+  //     onSend: () =>
+  //       sendTwitterPostRequest("Heading Twitter / X 1", "Body 1, abcdefghij"),
+  //   },
+  //   {
+  //     heading: "Heading Twitter / X 2",
+  //     body: "Body 2, abcdefghij",
+  //     onSend: () =>
+  //       sendTwitterPostRequest("Heading Twitter / X 2", "Body 2, abcdefghij"),
+  //   },
+  //   {
+  //     heading: "HeadingTwitter / X 2",
+  //     body: "Body 2, abcdefghij",
+  //     onSend: () =>
+  //       sendTwitterPostRequest("Heading Twitter / X 2", "Body 2, abcdefghij"),
+  //   },
+  // ];
 
   const getItemsToShow = () => {
     if (selectedSidebarItem === 0) return linkedInContents;
-    if (selectedSidebarItem === 1) return twitterContents;
+    if (selectedSidebarItem === 1) return tweetData;
     return mailData;
   };
 

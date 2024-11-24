@@ -7,30 +7,6 @@ from langchain_anthropic import ChatAnthropic
 from fastapi import FastAPI, Request
 
 
-# load_dotenv()
-# model = ChatAnthropic(
-#         model="claude-3-5-sonnet-20241022",
-#         temperature=0,
-#         max_tokens=1024,
-#         timeout=None,
-#         max_retries=2,
-#     )
-
-
-# current_dir = os.path.dirname(os.path.abspath(__file__))
-# persistent_directory = os.path.join(
-#     current_dir, "db", "chroma_db_llama32_claude")
-
-# embeddings = OllamaEmbeddings(model="llama3.2")
-
-# db = Chroma(persist_directory=persistent_directory,
-#             embedding_function=embeddings)
-
-# retriever = db.as_retriever(
-#     search_type="similarity",
-#     search_kwargs={"k": 5},
-# )
-
 def issueResolver(query):
     load_dotenv()
     model = ChatAnthropic(
@@ -109,7 +85,7 @@ def postGenerator(query):
         " generate an engaging social media post that are catered to Go developers based on the latest trends and the following query: " + 
         query +
         "Note that it is very important to consider the following:\n" +
-        "1. If post:twitter is mentioned in the query, stick to the character limit of the default twitter post. If post:linkedin is mentioned in the query follow its standards and similarily for other social media platforms" +
+        "1. If post:twitter is mentioned in the query, stick to the character limit of 100. If post:linkedin is mentioned in the query follow its standards and similarily for other social media platforms" +
         "2. If the query is someting that GoFr framework can help in, definitely mention how GoFr can help and specify helpful links related to the same or point them to the related GoFr doc"
         "3. If the query is someting GoFr cannot help with, just provide 'GoFr is not designed to solve this issue'. Don't add additional information"
         "4. Don't include any sentence in the begginning while starting out. Just put out the required content only."
