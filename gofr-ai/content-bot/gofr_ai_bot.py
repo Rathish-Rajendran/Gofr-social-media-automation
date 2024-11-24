@@ -7,31 +7,54 @@ from langchain_anthropic import ChatAnthropic
 from fastapi import FastAPI, Request
 
 
-load_dotenv()
-model = ChatAnthropic(
-        model="claude-3-5-sonnet-20241022",
-        temperature=0,
-        max_tokens=1024,
-        timeout=None,
-        max_retries=2,
-    )
+# load_dotenv()
+# model = ChatAnthropic(
+#         model="claude-3-5-sonnet-20241022",
+#         temperature=0,
+#         max_tokens=1024,
+#         timeout=None,
+#         max_retries=2,
+#     )
 
 
-current_dir = os.path.dirname(os.path.abspath(__file__))
-persistent_directory = os.path.join(
-    current_dir, "db", "chroma_db_llama32_claude")
+# current_dir = os.path.dirname(os.path.abspath(__file__))
+# persistent_directory = os.path.join(
+#     current_dir, "db", "chroma_db_llama32_claude")
 
-embeddings = OllamaEmbeddings(model="llama3.2")
+# embeddings = OllamaEmbeddings(model="llama3.2")
 
-db = Chroma(persist_directory=persistent_directory,
-            embedding_function=embeddings)
+# db = Chroma(persist_directory=persistent_directory,
+#             embedding_function=embeddings)
 
-retriever = db.as_retriever(
-    search_type="similarity",
-    search_kwargs={"k": 5},
-)
+# retriever = db.as_retriever(
+#     search_type="similarity",
+#     search_kwargs={"k": 5},
+# )
 
 def issueResolver(query):
+    load_dotenv()
+    model = ChatAnthropic(
+            model="claude-3-5-sonnet-20241022",
+            temperature=0.7,
+            max_tokens=1024,
+            timeout=None,
+            max_retries=2,
+        )
+
+
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    persistent_directory = os.path.join(
+        current_dir, "db", "chroma_db_llama32_claude")
+
+    embeddings = OllamaEmbeddings(model="llama3.2")
+
+    db = Chroma(persist_directory=persistent_directory,
+                embedding_function=embeddings)
+
+    retriever = db.as_retriever(
+        search_type="similarity",
+        search_kwargs={"k": 5},
+    )
     relevant_docs = retriever.invoke(query)
 
     combined_input = (
@@ -56,6 +79,29 @@ def issueResolver(query):
     return result.content
 
 def postGenerator(query):
+    load_dotenv()
+    model = ChatAnthropic(
+            model="claude-3-5-sonnet-20241022",
+            temperature=0.7,
+            max_tokens=1024,
+            timeout=None,
+            max_retries=2,
+        )
+
+
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    persistent_directory = os.path.join(
+        current_dir, "db", "chroma_db_llama32_claude")
+
+    embeddings = OllamaEmbeddings(model="llama3.2")
+
+    db = Chroma(persist_directory=persistent_directory,
+                embedding_function=embeddings)
+
+    retriever = db.as_retriever(
+        search_type="similarity",
+        search_kwargs={"k": 5},
+    )
     relevant_docs = retriever.invoke(query)
 
     combined_input = (

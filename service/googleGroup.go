@@ -87,13 +87,16 @@ func GoogleGroupHandler(ctx *gofr.Context) (interface{}, error) {
 		return nil, fmt.Errorf("Error: %v", err)
 	}
 
-	for _, email := range result.Output {
+	for i, email := range result.Output {
 		respBody, err := GetResolvedMail(email.Body)
+		// fmt.Println("LOOP", respBody)
 		if err != nil {
 			continue
 		}
-		email.Body = respBody
+		result.Output[i].Body = respBody
+		// final_res = email.Body
 	}
+	fmt.Println("RES TRACE", result.Output)
 	// message := gomail.NewMessage()
 	// message.SetHeader("From", os.Getenv("GMAIL"))
 	// senderEmail := fmt.Sprintf("%v@%v", sender.MailboxName, sender.HostName)
@@ -113,5 +116,6 @@ func GoogleGroupHandler(ctx *gofr.Context) (interface{}, error) {
 	// if err := <-done; err != nil {
 	// 	log.Fatalf("Error while fetching messages: %v", err)
 	// }
-	return fixedOutput, nil
+	out, err := json.Marshal(result)
+	return string(out), nil
 }
