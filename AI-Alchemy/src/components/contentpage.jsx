@@ -1,4 +1,4 @@
-const ContentPage = ({ items, showItems=true }) => {
+const ContentPage = ({ items, showItems=true, isMail=false }) => {
     console.log(items)
     return (<div className="container-fluid row g-4 mt-4">
         { /* Show the card items */ }
@@ -6,7 +6,7 @@ const ContentPage = ({ items, showItems=true }) => {
             items.map((item, index) => (
                 <div key={index} className="card text-bg-dark m-1 col-md-5">
                     <div className="card-body">
-                    <h5 className="card-title">{item.heading}</h5>
+                    <h5 className="card-title">{isMail? item.subject : item.heading}</h5>
                     <p className="card-text">{item.body}</p>
                     <a href="#" className="btn btn-primary"
                         onClick={item.onSend}
