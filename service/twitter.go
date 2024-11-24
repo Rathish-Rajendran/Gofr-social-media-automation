@@ -119,12 +119,12 @@ func SendGETRequestWithBody(url string, body TwitterRequest) (*TwitterResponse, 
 }
 
 
-func GetTweet(ctx *gofr.Context) (interface{}, error) {
+func GetTweet(ctx *gofr.Context) (TwitterResponse, error) {
 	// Seed the random number generator
 	rand.Seed(uint64(time.Now().UnixNano()))
-    num := rand.Intn(5)
+    num := rand.Intn(9)
 
-	buzzWords := []string{ "concurrency", "http api metrics", "observabillity", "ease of building", "GRPC" }
+	buzzWords := []string{ "concurrency", "http api metrics", "observabillity", "ease of building", "GRPC", "Routing", "Tracing", "Microservices", "Cron" }
 	body := TwitterRequest{
         Content: fmt.Sprintf("Generate a post:twitter on %s", buzzWords[num]),
     }
@@ -132,11 +132,14 @@ func GetTweet(ctx *gofr.Context) (interface{}, error) {
     response, err := SendGETRequestWithBody("http://127.0.0.1:9000/post-generator", body)
     if err != nil {
         fmt.Printf("Error: %v\n", err)
-        return nil, err
+        return TwitterResponse{}, err
     }
 
     fmt.Printf("Response result: %s\n", response.Result)
-	return string(response.Result), nil
+	// return string(response.Result), nil
+	return TwitterResponse{
+		Result: response.Result,
+	}, nil
 }
 
 

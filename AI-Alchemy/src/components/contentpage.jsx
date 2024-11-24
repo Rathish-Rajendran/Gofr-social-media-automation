@@ -1,7 +1,6 @@
 import Markdown from "react-markdown";
 
 const ContentPage = ({ items, showItems = true, isMail = false }) => {
-  console.log(items);
   return (
     <div className="container-fluid row g-4 mt-4">
       {/* Show the card items */}
@@ -21,7 +20,13 @@ const ContentPage = ({ items, showItems = true, isMail = false }) => {
             </div>
           </div>
         ))}
-      {showItems && items.length === 0 && <h1>Loading...</h1>}
+      {showItems && items.length === 0 && (
+        <h1>
+          GoFr has gone hunting for trends and issues...
+          <br />
+          Please wait
+        </h1>
+      )}
 
       {/* Show the analytics */}
       {!showItems && <h1>No analytics at the moment</h1>}

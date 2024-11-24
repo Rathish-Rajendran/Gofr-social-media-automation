@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 
 	"github.com/joho/godotenv"
@@ -41,7 +42,24 @@ func main() {
 	})
 
 	app.GET("/newTweet", func(ctx *gofr.Context) (interface{}, error) {
-		return GetTweet(ctx)
+		tweet1, err := GetTweet(ctx)
+		fmt.Println(tweet1, err)
+		tweet2, err := GetTweet(ctx)
+		// tweet2Output := strings.ReplaceAll(string(tweet1), "'", "\"")
+		fmt.Println(tweet2)
+
+		tweets := []TwitterResponse{
+			{Result: tweet1.Result},
+			{Result: tweet2.Result},
+		}
+
+
+		// type Response struct {
+		// 	Tweets []TwitterResponse
+		// }
+		// response := Response{Tweets: tweets}
+		out, err := json.Marshal(tweets)
+		return string(out), nil
 	})
 
 	app.POST("/linkedin", func(ctx *gofr.Context) (interface{}, error) {
