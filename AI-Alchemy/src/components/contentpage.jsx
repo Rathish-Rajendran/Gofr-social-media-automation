@@ -1,4 +1,5 @@
 const ContentPage = ({ items, showItems=true }) => {
+    console.log(items)
     return (<div className="container-fluid row g-4 mt-4">
         { /* Show the card items */ }
         { showItems &&
@@ -7,7 +8,9 @@ const ContentPage = ({ items, showItems=true }) => {
                     <div className="card-body">
                     <h5 className="card-title">{item.heading}</h5>
                     <p className="card-text">{item.body}</p>
-                    <a href="#" className="btn btn-primary">Approve</a>
+                    <a href="#" className="btn btn-primary"
+                        onClick={item.onSend}
+                    >Send</a>
                     </div>
                 </div>
             ))

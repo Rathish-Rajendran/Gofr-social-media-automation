@@ -4,6 +4,29 @@ import SideBar from './components/sidebar'
 import ContentPage from "./components/contentpage"
 import { useState } from "react"
 
+const BACKEND_URL="http://localhost:8000"
+
+const sendTwitterPostRequest = async (heading, body) => {
+  const content = `${heading}\n\n${body}`; // Combine heading and body
+  try {
+    const response = await fetch(BACKEND_URL + "/tweet", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ content }),
+    });
+
+    if (response.ok) {
+      console.log("Content sent successfully:", content);
+    } else {
+      console.error("Failed to send content:", response.statusText);
+    }
+  } catch (error) {
+    console.error("Error while sending content:", error);
+  }
+}
+
 function App() {
   // showCards is a bool controlling if we should show
   // the cards or the analytics
@@ -40,15 +63,18 @@ function App() {
   const twitterContents = [
     {
       heading: "Heading Twitter / X 1",
-      body: "Body 1, abcdefghij"
+      body: "Body 1, abcdefghij",
+      onSend: () => sendTwitterPostRequest("Heading Twitter / X 1", "Body 1, abcdefghij")
     },
     {
       heading: "Heading Twitter / X 2",
-      body: "Body 2, abcdefghij"
+      body: "Body 2, abcdefghij",
+      onSend: () => sendTwitterPostRequest("Heading Twitter / X 2", "Body 2, abcdefghij")
     },
     {
       heading: "HeadingTwitter / X 2",
-      body: "Body 2, abcdefghij"
+      body: "Body 2, abcdefghij",
+      onSend: () => sendTwitterPostRequest("Heading Twitter / X 2", "Body 2, abcdefghij")
     },
   ]
 
