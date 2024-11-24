@@ -2,12 +2,13 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"os"
-	// "log"
+
 	"bytes"
-	"net/http"
 	"encoding/json"
-	"io/ioutil"
+	"net/http"
+
 	"github.com/dghubble/oauth1"
 	"gofr.dev/pkg/gofr"
 )
@@ -16,10 +17,10 @@ import (
 func postTweet(tweet string) error {
 	// OAuth1 configuration
 	// Twitter API credentials
-	var consumerKey    = os.Getenv("X_CONSUMER_KEY")
+	var consumerKey = os.Getenv("X_CONSUMER_KEY")
 	var consumerSecret = os.Getenv("X_CONSUMER_SECRET")
-	var accessToken    = os.Getenv("X_ACCESS_TOKEN")
-	var accessSecret   = os.Getenv("X_ACCESS_SECRET")
+	var accessToken = os.Getenv("X_ACCESS_TOKEN")
+	var accessSecret = os.Getenv("X_ACCESS_SECRET")
 	config := oauth1.NewConfig(consumerKey, consumerSecret)
 	token := oauth1.NewToken(accessToken, accessSecret)
 
@@ -55,7 +56,7 @@ func postTweet(tweet string) error {
 
 	// Check if the tweet was successfully posted
 	if resp.StatusCode < 200 || resp.StatusCode >= 400 {
-		respBody, _ := ioutil.ReadAll(resp.Body)
+		respBody, _ := io.ReadAll(resp.Body)
 		fmt.Printf("Response Body: %s\n", respBody)
 		return fmt.Errorf("failed to post tweet. Status: %s", resp.Status)
 	}
