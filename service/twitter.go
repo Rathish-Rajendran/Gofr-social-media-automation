@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"time"
 
 	"bytes"
 	"encoding/json"
@@ -11,6 +12,7 @@ import (
 
 	"github.com/dghubble/oauth1"
 	"gofr.dev/pkg/gofr"
+	"golang.org/x/exp/rand"
 )
 
 // Function to post a tweet
@@ -63,6 +65,81 @@ func postTweet(tweet string) error {
 
 	return nil
 }
+
+
+
+// TwitterRequest represents the data to be sent in request
+type TwitterRequest struct {
+    Content string `json:"content"`
+}
+
+// TwitterResponse represents the API response structure
+type TwitterResponse struct {
+    Result string `json:"result"`
+}
+
+// SendGETRequestWithBody sends a GET request with a body
+func SendGETRequestWithBody(url string, body TwitterRequest) (*TwitterResponse, error) {
+    // Convert body to JSON
+    jsonBody, err := json.Marshal(body)
+    if err != nil {
+        return nil, fmt.Errorf("error marshaling body: %v", err)
+    }
+
+    // Create new request
+    req, err := http.NewRequest(http.MethodGet, url, bytes.NewBuffer(jsonBody))
+    if err != nil {
+        return nil, fmt.Errorf("error creating request: %v", err)
+    }
+
+    // Set headers
+    req.Header.Set("Content-Type", "application/json")
+
+    // Create HTTP client and send request
+    client := &http.Client{}
+    resp, err := client.Do(req)
+    if err != nil {
+        return nil, fmt.Errorf("error sending request: %v", err)
+    }
+    defer resp.Body.Close()
+
+    // Read response body
+    respBody, err := io.ReadAll(resp.Body)
+    if err != nil {
+        return nil, fmt.Errorf("error reading response: %v", err)
+    }
+
+    // Parse response
+    var response TwitterResponse
+    if err := json.Unmarshal(respBody, &response); err != nil {
+        return nil, fmt.Errorf("error parsing response: %v", err)
+    }
+
+    return &response, nil
+}
+
+
+func GetTweet(ctx *gofr.Context) (interface{}, error) {
+	// Seed the random number generator
+	rand.Seed(uint64(time.Now().UnixNano()))
+    num := rand.Intn(5)
+
+	buzzWords := []string{ "concurrency", "http api metrics", "observabillity", "ease of building", "GRPC" }
+	body := TwitterRequest{
+        Content: fmt.Sprintf("Generate a post:twitter on %s", buzzWords[num]),
+    }
+
+    response, err := SendGETRequestWithBody("http://127.0.0.1:9000/post-generator", body)
+    if err != nil {
+        fmt.Printf("Error: %v\n", err)
+        return nil, err
+    }
+
+    fmt.Printf("Response result: %s\n", response.Result)
+	return string(response.Result), nil
+}
+
+
 
 // Handler for the POST endpoint
 func TweetHandler(ctx *gofr.Context) (interface{}, error) {

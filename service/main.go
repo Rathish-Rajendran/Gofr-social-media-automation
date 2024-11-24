@@ -40,6 +40,10 @@ func main() {
 		return TweetHandler(ctx)
 	})
 
+	app.GET("/newTweet", func(ctx *gofr.Context) (interface{}, error) {
+		return GetTweet(ctx)
+	})
+
 	app.POST("/linkedin", func(ctx *gofr.Context) (interface{}, error) {
 		return PostInLinkedIn(ctx)
 	})
