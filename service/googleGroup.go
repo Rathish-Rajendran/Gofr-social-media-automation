@@ -6,8 +6,9 @@ import (
 
 	// "log"
 	"encoding/json"
-	"os/exec"
 	"os"
+	"os/exec"
+
 	"gofr.dev/pkg/gofr"
 	"gopkg.in/gomail.v2"
 )
@@ -36,7 +37,7 @@ func GoogleGroupReplay(ctx *gofr.Context) (interface{}, error) {
 	email := os.Getenv("GMAIL")
 	password := os.Getenv("GMAIL_PASSWORD")
 	message := gomail.NewMessage()
-	message.SetHeader("From", email )
+	message.SetHeader("From", email)
 	// senderEmail := fmt.Sprintf("%v@%v", sender.MailboxName, sender.HostName)
 	// message.SetHeader("To", senderEmail)
 	// message.SetHeader("Subject", msg.Envelope.Subject)
@@ -75,10 +76,14 @@ func GoogleGroupHandler(ctx *gofr.Context) (interface{}, error) {
 	if err != nil {
 		return nil, fmt.Errorf("Error: %v", err)
 	}
-	// Print the parsed data
-	// for _, email := range result.Output {
-	// 	fmt.Printf("From: %s\nSubject: %s\nBody: %s\n\n", email.From, email.Subject, email.Body)
-	// }
+
+	for _, email := range result.Output {
+		respBody, err := GetResolvedMail(email.Body)
+		if err != nil {
+			continue
+		}
+		email.Body = respBody
+	}
 	// message := gomail.NewMessage()
 	// message.SetHeader("From", os.Getenv("GMAIL"))
 	// senderEmail := fmt.Sprintf("%v@%v", sender.MailboxName, sender.HostName)
@@ -92,6 +97,8 @@ func GoogleGroupHandler(ctx *gofr.Context) (interface{}, error) {
 	// 	panic(err)
 	// }
 	println("Email sent successfully!")
+
+	// Process each mails
 
 	// if err := <-done; err != nil {
 	// 	log.Fatalf("Error while fetching messages: %v", err)
